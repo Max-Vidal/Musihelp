@@ -65,6 +65,28 @@ export function useScoreLoader() {
           e.stopPropagation()
           setSelectedNote(noteData.name)
           console.log(`🎵 Nota seleccionada: ${noteData.name}`)
+
+          // Quitar subrayado previo de todas las notas
+          notesMapRef.current.forEach((_, el) => {
+            el.removeAttribute('data-selected')
+            const prevLine = el.parentNode?.querySelector('.note-underline')
+            if (prevLine) prevLine.remove()
+          })
+
+          // Marcar la nota seleccionada con subrayado azul sutil
+          element.setAttribute('data-selected', 'true')
+          const bbox = element.getBBox()
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+          line.setAttribute('class', 'note-underline')
+          line.setAttribute('x1', bbox.x)
+          line.setAttribute('y1', bbox.y + bbox.height + 3)
+          line.setAttribute('x2', bbox.x + bbox.width)
+          line.setAttribute('y2', bbox.y + bbox.height + 3)
+          line.setAttribute('stroke', '#42a5f5')
+          line.setAttribute('stroke-width', '2')
+          line.setAttribute('stroke-opacity', '0.7')
+          line.setAttribute('stroke-linecap', 'round')
+          element.parentNode.appendChild(line)
         })
       }
     })
